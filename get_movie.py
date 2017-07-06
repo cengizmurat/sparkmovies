@@ -67,7 +67,7 @@ def getMovieJson(movieId):
                   json += "\"country\":\"" + j.find_all("span")[-1].text.strip() + "\","
 
   url_review = "http://www.allocine.fr/film/fichefilm-" + movieId + "/critiques/spectateurs/"
-  json = json[:-1] + getReviewsJson(url_review) + "}"
+  json += getReviewsJson(url_review) + "}"
   #json = json[:-1] + "}" # without reviews
   return json
 
