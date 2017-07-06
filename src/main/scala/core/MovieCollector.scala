@@ -13,6 +13,7 @@ object MovieCollector {
 
   var apiKey = ""
   var collectedMovies = 0
+  var collectedReviews = 0
 
   val moviesToFind = List("Wonder Woman", "Transformers", "300", "Batman")
   val pathToFile = "data/movie.txt"
@@ -39,6 +40,7 @@ object MovieCollector {
     //getMoviesFromFile(writer)
     getMostPopularMovies(writer)
     writer.close()
+    println(collectedReviews + " reviews collected")
   }
 
   /**
@@ -81,6 +83,7 @@ object MovieCollector {
         val newJson = ReviewCollector.retrieveReviews(json.as[JsObject], apiKey)
         val numberReviews = (newJson \ "reviews").as[JsArray].value.size
         collectedMovies += 1
+        collectedReviews += numberReviews
         println(collectedMovies + " : " + (newJson \ "original_title").as[String] + " (" + numberReviews + " reviews)")
         writer.println(newJson.toString)
       }
