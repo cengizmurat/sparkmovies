@@ -29,7 +29,7 @@ def getReviewsJson(movieUrl) :
     soup_page = getSoupFromUrl(url_page)
     for d in soup_page.find_all("div", {"class": "row item hred"}):
         c = d.find("div", {"class": "col-xs-12 col-sm-9"})
-        json += "\"" + c.find("p", {"itemprop": "description"}).text.strip() + "\","
+        json += "\"" + c.find("p", {"itemprop": "description"}).text.strip().replace('\n', ' ').replace('\r', '').replace('\"', "\\\"") + "\","
   json = json[:-1] + "]"
   return json
 
