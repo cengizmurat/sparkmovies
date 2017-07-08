@@ -1,21 +1,21 @@
 package utils
 
 import play.api.libs.json._
-import utils.GenreUtils.Genre
-import utils.ReviewUtils.Review
+import utils.FeelUtils.Feels
 
 object MovieUtils {
 
 	case class Movie(
 										id: Option[Int],
-										adult: Option[Boolean],
-										genres: Option[List[Genre]],
-										original_title: Option[String],
-										//release_date: Date,
-										popularity: Option[Double],
-										vote_average: Option[Double],
-										vote_count: Option[Int],
-										reviews: Option[List[Review]]
+										title: Option[String],
+										rating: Option[Double],
+										release: Option[Int],
+										author: Option[String],
+										actors: Option[List[String]],
+										genres: Option[List[String]],
+										country: Option[String],
+										reviews: Option[List[String]],
+									  feels: Option[Feels]
 									)
 
 	implicit val movieFormat = Json.format[Movie]
