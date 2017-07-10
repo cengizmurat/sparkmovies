@@ -7,9 +7,9 @@ from review_analyzis import *
 class KafkaManager:
 
   def __init__(self):
-    self.movieTopic = 'movie3'
-    self.feelsTopic = 'feel3'
-    self.producer = KafkaProducer(bootstrap_servers='localhost:9092')
+    self.movieTopic = 'movie4'
+    self.feelsTopic = 'feel4'
+    self.producer = KafkaProducer(bootstrap_servers='192.168.43.216:9092')
     self.consumerMovie = KafkaConsumer(self.movieTopic, bootstrap_servers='localhost:9092', group_id='test-consumer-group')
     self.consumerFeels = KafkaConsumer(self.feelsTopic, bootstrap_servers='localhost:9092', group_id='test-consumer-group')
     #self.consumer.subscribe([self.movieTopic, self.feelsTopic])
@@ -99,7 +99,7 @@ class KafkaManager:
 
   def writeMovie(self, msg):
     self.producer.send(self.movieTopic, msg)
-  
+
   def writeFeels(self, msg):
     self.producer.send(self.feelsTopic, msg)
 

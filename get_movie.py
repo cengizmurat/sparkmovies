@@ -95,7 +95,7 @@ def getBestMoviesId():
 
 def getData() :
   ids = getBestMoviesId()
-  file = open("movies.txt", "w")
+  file = open("moviesRealTime.txt", "w")
   jsons = []
   count = 0
   for movieId in ids:
@@ -106,3 +106,9 @@ def getData() :
     file.write(json + "\n")
   file.close()
   return jsons
+
+def main():
+     getData()
+
+if __name__ == '__main__':
+    main()
