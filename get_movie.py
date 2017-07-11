@@ -37,47 +37,50 @@ def getReviewsJson(movieUrl) :
 
 def getMovieJson(movieId):
   url_movie = "http://www.allocine.fr/film/fichefilm_gen_cfilm=" + movieId + ".html"
-  soup = getSoupFromUrl(url_movie)
-  hash_map = {}
-  hash_map["id"] = int(movieId)
-  hash_map["title"] = soup.find("meta", {"property" : "og:title"}).get("content").encode("utf-8")
-  hash_map["rating"] = float(soup.find("span", {"itemprop" : "ratingValue"}).get("content").replace(",", "."))
-  for j in soup.find_all("div", {"class", "meta-body-item"}):
-    key = j.find("span", {"class": "light"}).text.encode("utf-8")
-    if key == "Date de sortie":
-      hash_map["release"] = int(j.find_all("span")[-1].text[-4:])
-    elif key == "De" :
-      hash_map["author"] = j.find_all("span")[-1].text
-    elif key == "Avec" :
-      actors = []
-      for v in j.find_all("span") :
-        actor = v.text
-        if actor != " plus " and actor != "Avec":
-          actors.append(actor)
-      hash_map["actors"] = actors
-    elif key == "Genres" :
-      genres = []
-      for v in j.find_all("span", {"itemprop": "genre"}):
-        genres.append(v.text)
-      hash_map["genres"] = genres
-    elif key == "Nationalité" :
-      hash_map["country"] = j.find_all("span")[-1].text.strip()
+  try :
+    soup = getSoupFromUrl(url_movie)
+    hash_map = {}
+    hash_map["id"] = int(movieId)
+    hash_map["title"] = soup.find("meta", {"property" : "og:title"}).get("content").encode("utf-8")
+    hash_map["rating"] = float(soup.find("span", {"itemprop" : "ratingValue"}).get("content").replace(",", "."))
+    for j in soup.find_all("div", {"class", "meta-body-item"}):
+      key = j.find("span", {"class": "light"}).text.encode("utf-8")
+      if key == "Date de sortie":
+        hash_map["release"] = int(j.find_all("span")[-1].text[-4:])
+      elif key == "De" :
+        hash_map["author"] = j.find_all("span")[-1].text
+      elif key == "Avec" :
+        actors = []
+        for v in j.find_all("span") :
+          actor = v.text
+          if actor != " plus " and actor != "Avec":
+            actors.append(actor)
+        hash_map["actors"] = actors
+      elif key == "Genres" :
+        genres = []
+        for v in j.find_all("span", {"itemprop": "genre"}):
+          genres.append(v.text)
+        hash_map["genres"] = genres
+      elif key == "Nationalité" :
+        hash_map["country"] = j.find_all("span")[-1].text.strip()
 
-  url_review = "http://www.allocine.fr/film/fichefilm-" + movieId + "/critiques/spectateurs/"
-  soup = getSoupFromUrl(url_review)
-  max = findMaxPages(soup)
+    url_review = "http://www.allocine.fr/film/fichefilm-" + movieId + "/critiques/spectateurs/"
+    soup = getSoupFromUrl(url_review)
+    max = findMaxPages(soup)
 
-  reviews = []
-  for i in range(max):
-    print("Review page ", i + 1)
-    url_page = url_review + "?page=" + str(i + 1)
-    soup_page = getSoupFromUrl(url_page)
-    for d in soup_page.find_all("div", {"class": "row item hred"}):
-        c = d.find("div", {"class": "col-xs-12 col-sm-9"})
-        if c is not None:
-          reviews.append(c.find("p", {"itemprop": "description"}).text.strip().replace('\n', ' ').replace('\r', ''))
-  hash_map["reviews"] = reviews
-  return json.dumps(hash_map)
+    reviews = []
+    for i in range(max):
+      print("Review page ", i + 1)
+      url_page = url_review + "?page=" + str(i + 1)
+      soup_page = getSoupFromUrl(url_page)
+      for d in soup_page.find_all("div", {"class": "row item hred"}):
+          c = d.find("div", {"class": "col-xs-12 col-sm-9"})
+          if c is not None:
+            reviews.append(c.find("p", {"itemprop": "description"}).text.strip().replace('\n', ' ').replace('\r', ''))
+    hash_map["reviews"] = reviews
+    return json.dumps(hash_map)
+  except:
+    return ""
 
 def getMoviesId(soup):
   ids = []

@@ -6,12 +6,12 @@ from review_analyzis import *
 
 class KafkaManager:
 
-  def __init__(self):
+  def __init__(self, ip):
     self.movieTopic = 'movie4'
     self.feelsTopic = 'feel4'
-    self.producer = KafkaProducer(bootstrap_servers='192.168.43.216:9092')
-    self.consumerMovie = KafkaConsumer(self.movieTopic, bootstrap_servers='localhost:9092', group_id='test-consumer-group')
-    self.consumerFeels = KafkaConsumer(self.feelsTopic, bootstrap_servers='localhost:9092', group_id='test-consumer-group')
+    self.producer = KafkaProducer(bootstrap_servers=ip + ':9092')
+    self.consumerMovie = KafkaConsumer(self.movieTopic, bootstrap_servers=ip + ':9092', group_id='test-consumer-group')
+    self.consumerFeels = KafkaConsumer(self.feelsTopic, bootstrap_servers=ip + ':9092', group_id='test-consumer-group')
     #self.consumer.subscribe([self.movieTopic, self.feelsTopic])
 
   def getMovies(self, n, restart):
@@ -104,7 +104,7 @@ class KafkaManager:
     self.producer.send(self.feelsTopic, msg)
 
   def getDataFile(self):
-    file = open("movies.txt", "r")
+    file = open("data/movies.txt", "r")
     count = 0
     for json in file.readlines():
       self.writeMovie(json)
@@ -117,6 +117,9 @@ class KafkaManager:
 
   def computeFeels(self, n, restart):
     movies = self.getMovies(n, restart)
+    file = open("data/feels.txt", "w")
     for movie in movies:
-      self.writeFeels(getGlobalAnalyzisForMovie(movie))
+      json = getGlobalAnalyzisForMovie(movie)
+      self.writeFeels(json)
+      file.write(json + '\n')
     return len(movies)
