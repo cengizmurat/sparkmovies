@@ -26,10 +26,13 @@ def getReviewsJson(movieUrl) :
     print("Review page ", i + 1)
     url_page = movieUrl + "?page=" + str(i + 1)
     soup_page = getSoupFromUrl(url_page)
-    for d in soup_page.find_all("div", {"class": "row item hred"}):
-        c = d.find("div", {"class": "col-xs-12 col-sm-9"})
-        if c is not None:
-          json += "\"" + c.find("p", {"itemprop": "description"}).text.strip().replace('\n', ' ').replace('\r', '').replace('\"', "\\\"") + "\","
+    try :
+      for d in soup_page.find_all("div", {"class": "row item hred"}):
+          c = d.find("div", {"class": "col-xs-12 col-sm-9"})
+          if c is not None:
+            json += "\"" + c.find("p", {"itemprop": "description"}).text.strip().replace('\n', ' ').replace('\r', '').replace('\"', "\\\"") + "\","
+    except :
+      print("Error page " + str(i))
   json = json[:-1] + "]"
   return json
 
