@@ -15,8 +15,6 @@ def findMaxPages(soup):
   for p in soup.find_all("nav", {"class": "pagination cf"}):
     for c in p.find_all("div", {"class": "pagination-item-holder"}):
       max = int(c.find_all("span")[-1].text)
-  if (max > 10):
-    return 10
   return max
 
 def getReviewsJson(movieUrl) :
